@@ -1,0 +1,9 @@
+[build]
+     publish = "."
+     functions = "netlify/functions"
+
+   # Salurkan panggilan /api/generate terus ke Netlify Function
+   [[redirects]]
+     from = "/api/generate"
+     to = "/.netlify/functions/generate"
+     status = 200
