@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Power Copy AI - AI Copywriting Assistant Power Jelajah</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Phosphor Icons for modern cute UI -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Outfit"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+            },
+            amberBrand: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background: radial-gradient(circle at top left, #f8fafc, #f1f5f9 60%, #e2e8f0);
+      min-height: 100vh;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    @keyframes pulse-soft {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(0.99); }
+    }
+    .animate-pulse-soft {
+      animation: pulse-soft 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased p-3 sm:p-6 lg:p-8">
+
+  <div class="max-w-7xl mx-auto">
+    <!-- Top Navbar / Header -->
+    <header class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 mb-6 border-b border-slate-200/80">
+      <div class="flex items-center gap-3.5 text-center sm:text-left">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-brand-600 flex items-center justify-center text-white shadow-lg shadow-amber-500/20 text-2xl font-bold">
+          ⚡
+        </div>
+        <div>
+          <div class="flex items-center justify-center sm:justify-start gap-2">
+            <h1 class="font-display font-extrabold text-2xl sm:text-3xl tracking-tight text-slate-900">
+              POWER COPY AI
+            </h1>
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-300">
+              Affiliate Edition
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+            Bantu anda hasilkan content Power Jelajah dengan AI.
+          </p>
+        </div>
+      </div>
+
+      <!-- Single Product Official Badge & Settings button -->
+      <div class="flex items-center gap-3">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-50 to-emerald-50 border border-amber-200 shadow-sm">
+          <span class="flex h-2.5 w-2.5 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+          </span>
+          <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Produk:</span>
+          <span class="text-xs sm:text-sm font-extrabold text-amber-900 bg-amber-200/70 px-2 py-0.5 rounded-md">
+            🌟 POWER JELAJAH
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- LEFT COLUMN: INPUT CONTROLS (5 cols on lg) -->
+      <section class="lg:col-span-5 space-y-5">
+        <div class="glass-card rounded-3xl p-5 sm:p-6 border border-slate-200/80">
+          
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="font-display font-bold text-lg text-slate-800 flex items-center gap-2">
+              <i class="ph ph-sliders text-brand-600 text-xl"></i>
+              Konfigurasi Content
+            </h2>
+            <button id="btnResetForm" class="text-xs font-medium text-slate-400 hover:text-rose-500 flex items-center gap-1 transition-colors">
+              <i class="ph ph-arrow-counter-clockwise"></i> Reset
+            </button>
+          </div>
+
+          <!-- Product Inclusion Reminder Pill -->
+          <div class="mb-4 bg-emerald-50/70 border border-emerald-200/70 rounded-2xl p-3 flex items-start gap-2.5 text-xs text-emerald-900">
+            <span class="text-base leading-none">💡</span>
+            <div>
+              <strong>Satu Pakej Lengkap:</strong> Mengandungi <strong>Jelajah Tajwid</strong> & <strong>Jelajah Iqra’</strong>. AI akan automatik memilih fakta yang relevan mengikut arahan anda.
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <!-- 1. PLATFORM -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                <i class="ph ph-device-mobile text-slate-500"></i>
+                📱 Platform
+              </label>
+              <div class="grid grid-cols-3 sm:grid-cols-5 gap-1.5" id="platformSelector">
+                <button type="button" data-val="Facebook" class="platform-btn active-chip py-2 px-1 text-center rounded-xl text-xs font-semibold border transition-all">Facebook</button>
+                <button type="button" data-val="Threads" class="platform-btn inactive-chip py-2 px-1 text-center rounded-xl text-xs font-semibold border transition-all">Threads</button>
+                <button type="button" data-val="Instagram" class="platform-btn inactive-chip py-2 px-1 text-center rounded-xl text-xs font-semibold border transition-all">Instagram</button>
+                <button type="button" data-val="TikTok" class="platform-btn inactive-chip py-2 px-1 text-center rounded-xl text-xs font-semibold border transition-all">TikTok</button>
+                <button type="button" data-val="WhatsApp Status" class="platform-btn inactive-chip py-2 px-1 text-center rounded-xl text-xs font-semibold border transition-all col-span-2 sm:col-span-1">WA Status</button>
+              </div>
+              <input type="hidden" id="selectedPlatform" value="Facebook">
+            </div>
+
+            <!-- 2. JENIS CONTENT -->
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                  <i class="ph ph-article text-slate-500"></i>
+                  ✍️ Jenis Content
+                </label>
+              </div>
+              <select id="contentTypeSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-700 focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all outline-none">
+                <option value="Soft Sell">Soft Sell (Bermula masalah/cerita/insight)</option>
+                <option value="Hard Sell">Hard Sell (Terus ke tawaran & manfaat)</option>
+                <option value="Storytelling">Storytelling (Penceritaan beremosi/pengalaman)</option>
+                <option value="Edukasi">Edukasi</option>
+                <option value="Promotional">Promotional (Fokus harga promosi & penjimatan)</option>
+                <option value="Problem → Solution">Problem → Solution (Anak cepat bosan vs interaktif)</option>
+                <option value="Awareness">Awareness (Pendedahan cara baharu belajar)</option>
+                <option value="Recruitment Affiliate">Recruitment Affiliate (Ajak jana income / jadi affiliate)</option>
+                <option value="Custom">Custom (Ikut arahan dalam kotak bawah)</option>
+              </select>
+            </div>
+
+            <!-- 3. GAYA PENULISAN -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                <i class="ph ph-paint-brush-broad text-slate-500"></i>
+                🎨 Gaya Penulisan
+              </label>
+              <select id="toneSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-700 focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all outline-none">
+                <option value="Santai">Santai (Bahasa santai kawan-kawan)</option>
+                <option value="Natural">Natural (Tidak nampak macam karangan AI)</option>
+                <option value="Relatable">Relatable (Situasi sebenar mak ayah & guru)</option>
+                <option value="Comel">Comel & Manja (Nada ceria & mesra anak-anak)</option>
+                <option value="Friendly">Friendly & Lembut</option>
+                <option value="Persuasive">Persuasive (Meyakinkan tanpa memaksa)</option>
+                <option value="Professional tetapi tidak terlalu formal">Professional (Sesuai untuk institusi / guru)</option>
+                <option value="Custom">Custom</option>
+              </select>
+            </div>
+
+            <!-- 4. PANJANG COPY -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                <i class="ph ph-ruler text-slate-500"></i>
+                📏 Panjang Copy
+              </label>
+              <div class="grid grid-cols-3 gap-2" id="lengthSelector">
+                <button type="button" data-val="Pendek" class="length-btn inactive-chip py-2 text-center rounded-xl text-xs font-semibold border transition-all">Pendek</button>
+                <button type="button" data-val="Sederhana" class="length-btn active-chip py-2 text-center rounded-xl text-xs font-semibold border transition-all">Sederhana</button>
+                <button type="button" data-val="Panjang" class="length-btn inactive-chip py-2 text-center rounded-xl text-xs font-semibold border transition-all">Panjang</button>
+              </div>
+              <input type="hidden" id="selectedLength" value="Sederhana">
+            </div>
+
+            <!-- 5. USER PROMPT / ARAHAN KHAS -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label for="userPrompt" class="block text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                  <i class="ph ph-chat-centered-text text-slate-500"></i>
+                  📝 Apa Yang Anda Mahu Post?
+                </label>
+                <span class="text-[11px] text-slate-400">Taip apa saja arahan</span>
+              </div>
+              <textarea id="userPrompt" rows="4" 
+                placeholder="Contoh: Saya nak buat Threads tentang ibu yang pening anak susah nak fokus baca Iqra', kaitkan macam mana aktiviti interaktif Jelajah Iqra' boleh bantu..." 
+                class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all outline-none resize-none leading-relaxed"></textarea>
+              
+              <!-- Quick Idea Pills -->
+              <div class="mt-2 flex flex-wrap items-center gap-1.5">
+                <span class="text-[11px] font-semibold text-slate-400 mr-1">Cadangan Idea:</span>
+                <button type="button" class="prompt-pill text-[11px] px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-colors"
+                  data-pill="Ibu yang penat paksa anak mengaji, perlukan kaedah interaktif tanpa bosan.">
+                  👶 Anak cepat bosan
+                </button>
+                <button type="button" class="prompt-pill text-[11px] px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-colors"
+                  data-pill="Promote kepada guru mengaji: Jelajah Tajwid mudah digunakan terus di web/share screen tanpa login.">
+                  👩‍🏫 Untuk Guru Mengaji
+                </button>
+                <button type="button" class="prompt-pill text-[11px] px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-colors"
+                  data-pill="Tawaran harga promosi End User RM15 sekali bayar seumur hidup (asal RM30) sehingga 30/9.">
+                  🏷️ Promo RM15 Seumur Hidup
+                </button>
+                <button type="button" class="prompt-pill text-[11px] px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-colors"
+                  data-pill="Ajak rakan daftar affiliate Power Jelajah, pendaftaran dibuka dengan harga promosi affiliate RM25.">
+                  💼 Recruitment Affiliate
+                </button>
+              </div>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="pt-2 space-y-2.5">
+              <button id="btnGenerate" type="button" class="w-full group relative flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-brand-600 to-teal-600 text-white font-bold text-sm tracking-wide shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all">
+                <i class="ph-bold ph-sparkle text-lg"></i>
+                <span>GENERATE COPY</span>
+              </button>
+
+              <button id="btnGenerate3Angles" type="button" class="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-xs sm:text-sm tracking-wide shadow-md shadow-amber-500/20 hover:shadow-amber-500/35 hover:-translate-y-0.5 active:translate-y-0 transition-all">
+                <span>🔥 GENERATE 3 ANGLE</span>
+                <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-semibold">Berbeza Pendekatan</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Quick Product Fact Reference Drawer (Read Only for Affiliate Confidence) -->
+        <div class="glass-card rounded-2xl p-4 border border-slate-200/80 text-xs text-slate-600">
+          <details class="group cursor-pointer">
+            <summary class="font-bold text-slate-700 flex items-center justify-between select-none list-none">
+              <span class="flex items-center gap-1.5 text-emerald-700">
+                <i class="ph ph-shield-check text-base"></i>
+                Integriti Fakta & Knowledge Base Rasmi
+              </span>
+              <i class="ph ph-caret-down group-open:rotate-180 transition-transform text-slate-400"></i>
+            </summary>
+            <div class="mt-3 pt-3 border-t border-slate-100 space-y-2 leading-relaxed text-slate-500">
+              <p>• <strong>Pakej:</strong> Power Jelajah (Jelajah Tajwid + Jelajah Iqra’ + extra game tambahan).</p>
+              <p>• <strong>Jelajah Iqra’:</strong> 6 Siri (Iqra’ 1 hingga 6 semua sudah sedia digunakan). Tiada audio. Akses webapp link peribadi. Perlu internet.</p>
+              <p>• <strong>Jelajah Tajwid:</strong> Webkuiz santai tanpa login / akaun / data. V1 & V2 sedia digunakan (V3 akan ditambah secara berperingkat).</p>
+              <p>• <strong>Harga:</strong> End User RM30 (Promo RM15 hingga 30/9). Affiliate RM40 (Promo RM25 hingga 30/9). Akses seumur hidup, bayaran transfer manual ke admin.</p>
+              <p class="text-rose-600 font-semibold">• Sistem dilindungi penapis anti-halusinasi: Tiada rekaan testimoni, statistik, bonus, atau link palsu.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- RIGHT COLUMN: OUTPUT & MODIFIERS (7 cols on lg) -->
+      <section class="lg:col-span-7 space-y-4">
+        <div class="glass-card rounded-3xl p-5 sm:p-6 border border-slate-200/80 min-h-[560px] flex flex-col justify-between relative overflow-hidden">
+
+          <!-- Top Output Header -->
+          <div>
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-200">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-lg">
+                  ✨
+                </div>
+                <div>
+                  <h2 class="font-display font-bold text-lg text-slate-800">
+                    HASIL COPYWRITING
+                  </h2>
+                  <p id="outputMetaBadge" class="text-xs text-slate-400">
+                    Sedia untuk dijana mengikut gaya pilihan anda.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Live Stats & Badges -->
+              <div id="statsBadgeContainer" class="hidden flex items-center gap-2">
+                <span id="charCountBadge" class="px-2.5 py-1 bg-slate-100 text-slate-600 text-[11px] font-semibold rounded-lg">
+                  0 aksara
+                </span>
+                <span id="wordCountBadge" class="px-2.5 py-1 bg-slate-100 text-slate-600 text-[11px] font-semibold rounded-lg">
+                  0 patah perkataan
+                </span>
+              </div>
+            </div>
+
+            <!-- Tab Buttons for 3-Angle View (Initially Hidden) -->
+            <div id="angleTabsContainer" class="hidden mt-3.5 flex items-center gap-2 p-1 bg-slate-100 rounded-xl overflow-x-auto">
+              <button type="button" data-angle="0" class="angle-tab-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-bold transition-all bg-white text-slate-800 shadow-sm flex items-center justify-center gap-1">
+                <span>❤️ Angle 1:</span> <span class="font-normal text-slate-500 text-[11px]">Emotional / Story</span>
+              </button>
+              <button type="button" data-angle="1" class="angle-tab-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1">
+                <span>💡 Angle 2:</span> <span class="font-normal text-slate-500 text-[11px]">Educational / Solusi</span>
+              </button>
+              <button type="button" data-angle="2" class="angle-tab-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1">
+                <span>🎯 Angle 3:</span> <span class="font-normal text-slate-500 text-[11px]">Selling / Urgensi</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Output Body (Content Area) -->
+          <div class="my-5 flex-1 relative flex flex-col justify-center">
+
+            <!-- State 1: Placeholder Empty State -->
+            <div id="emptyState" class="text-center py-14 px-4">
+              <div class="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center mx-auto mb-3.5 text-2xl text-emerald-600 animate-pulse-soft">
+                <i class="ph ph-chat-circle-dots"></i>
+              </div>
+              <h3 class="font-display font-bold text-slate-700 text-base">Belum Ada Copy Yang Dijana</h3>
+              <p class="text-xs text-slate-400 max-w-sm mx-auto mt-1.5">
+                Pilih platform dan masukkan arahan anda di sebelah kiri, kemudian tekan <strong class="text-brand-600">GENERATE COPY</strong> atau <strong class="text-amber-600">3 ANGLE</strong>.
+              </p>
+            </div>
+
+            <!-- State 2: Loading Indicator -->
+            <div id="loadingState" class="hidden text-center py-16 px-4">
+              <div class="relative w-16 h-16 mx-auto mb-4">
+                <div class="w-16 h-16 rounded-full border-4 border-emerald-100 border-t-brand-600 animate-spin"></div>
+                <div class="absolute inset-0 flex items-center justify-center text-lg">⚡</div>
+              </div>
+              <h3 class="font-display font-bold text-slate-800 text-base">Power Copy AI Sedang Menulis...</h3>
+              <p id="loadingStatusText" class="text-xs text-slate-400 mt-1 animate-pulse">
+                Menyusun hook, emosi, dan menyemak ketepatan fakta Power Jelajah.
+              </p>
+            </div>
+
+            <!-- State 3: Active Output Text View -->
+            <div id="contentState" class="hidden flex-1 flex flex-col">
+              <div class="relative flex-1 bg-slate-50/70 border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-inner">
+                <textarea id="outputContentArea" rows="14" class="w-full h-full bg-transparent text-slate-800 text-sm sm:text-base leading-relaxed font-sans outline-none resize-none custom-scrollbar" spellcheck="false"></textarea>
+                
+                <!-- Floating format tags -->
+                <div class="absolute top-3 right-3 flex items-center gap-1.5 opacity-80 hover:opacity-100 transition-opacity">
+                  <span id="activeBadgeTag" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-600 shadow-xs">
+                    Facebook
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Refinement / Modify Drawer Box (Hidden by default) -->
+            <div id="modifyDrawer" class="hidden mt-3 p-4 rounded-2xl bg-amber-50/60 border border-amber-200">
+              <div class="flex items-center justify-between mb-2">
+                <label for="modifyInput" class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+                  <i class="ph ph-magic-wand text-amber-600"></i>
+                  ✏️ Arahan Ubah Copy (Kekalkan Fakta Produk)
+                </label>
+                <button id="btnCloseModify" class="text-slate-400 hover:text-slate-600 text-xs">
+                  <i class="ph ph-x"></i>
+                </button>
+              </div>
+
+              <!-- Modifier Quick Buttons -->
+              <div class="flex flex-wrap gap-1.5 mb-2.5">
+                <button type="button" class="mod-pill text-[11px] px-2 py-0.5 rounded-lg bg-white border border-amber-200 text-amber-900 hover:bg-amber-100 transition-colors" data-mod="Buat lebih santai dan mesra kawan">
+                  😊 Lebih santai
+                </button>
+                <button type="button" class="mod-pill text-[11px] px-2 py-0.5 rounded-lg bg-white border border-amber-200 text-amber-900 hover:bg-amber-100 transition-colors" data-mod="Pendekkan dan fokus pada hook padu">
+                  ✂️ Pendekkan
+                </button>
+                <button type="button" class="mod-pill text-[11px] px-2 py-0.5 rounded-lg bg-white border border-amber-200 text-amber-900 hover:bg-amber-100 transition-colors" data-mod="Jangan terlalu menjual, lebihkan sudut situasi emosi ibu bapa">
+                  🕊️ Kurang menjual (soft)
+                </button>
+                <button type="button" class="mod-pill text-[11px] px-2 py-0.5 rounded-lg bg-white border border-amber-200 text-amber-900 hover:bg-amber-100 transition-colors" data-mod="Tambah unsur storytelling ringkas tentang anak seronok buat aktiviti">
+                  📖 Tambah storytelling
+                </button>
+                <button type="button" class="mod-pill text-[11px] px-2 py-0.5 rounded-lg bg-white border border-amber-200 text-amber-900 hover:bg-amber-100 transition-colors" data-mod="Masukkan maklumat harga promosi End User RM15 seumur hidup sehingga 30/9 dengan jelas">
+                  🏷️ Tambah harga promo
+                </button>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <input id="modifyInput" type="text" placeholder="Contoh: Buat lebih sesuai untuk Threads, kurangkan perenggan..." class="flex-1 text-xs sm:text-sm bg-white border border-amber-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:ring-2 focus:ring-amber-500">
+                <button id="btnSubmitModify" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1 shadow-sm whitespace-nowrap">
+                  <span>Hantar Ubahan</span>
+                  <i class="ph ph-paper-plane-right"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom Action Buttons: Copy, Regenerate, Modify -->
+          <div id="actionButtonsRow" class="hidden pt-3 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-2.5">
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <!-- COPY BUTTON -->
+              <button id="btnCopyText" type="button" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition-all active:scale-95">
+                <i class="ph ph-copy text-base"></i>
+                <span id="copyBtnText">📋 SALIN COPY</span>
+              </button>
+
+              <!-- REGENERATE BUTTON -->
+              <button id="btnRegenerate" type="button" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs font-bold shadow-xs transition-all active:scale-95">
+                <i class="ph ph-arrows-clockwise text-base text-brand-600"></i>
+                <span>🔄 GENERATE SEMULA</span>
+              </button>
+            </div>
+
+            <!-- UBAH COPY BUTTON TOGGLE -->
+            <button id="btnToggleModify" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs font-bold shadow-xs transition-all">
+              <i class="ph ph-pencil-simple text-base text-amber-600"></i>
+              <span>✏️ UBAH COPY</span>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-8 pt-4 border-t border-slate-200 text-center text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>
+        ⚡ <strong>POWER COPY AI</strong> — Didedikasikan khas untuk affiliate <strong>Power Jelajah</strong>.
+      </div>
+      <div>
+        Semua fakta dilindungi & dipatuhi mengikut silibus & panduan rasmi.
+      </div>
+    </footer>
+  </div>
+
+  <!-- Custom Toast Notification Container (No alert() used) -->
+  <div id="toastNotification" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs sm:text-sm font-semibold shadow-2xl">
+    <span id="toastIcon">📋</span>
+    <span id="toastMessage">Teks berjaya disalin!</span>
+  </div>
+
+  <script>
+    /**
+     * KNOWLEDGE BASE & SYSTEM INSTRUCTION
+     * STRICT ZERO-TOLERANCE TO HALLUCINATION
+     */
+    const SYSTEM_INSTRUCTION = `You are POWER COPY AI, a specialised social media copywriter for POWER JELAJAH.
+
+POWER JELAJAH is the ONLY product you are writing for.
+POWER JELAJAH consists of:
+1. Jelajah Tajwid
+2. Jelajah Iqra'
+
+Your job is to create natural, engaging, persuasive Malay-language content for social media.
+
+You may be creative with:
+- hooks
+- storytelling
+- structure
+- angles
+- emotional framing
+- wording
+- persuasion
+- CTA
+
+However, the Knowledge Base is the ONLY source of truth for product facts.
+Never invent product information.
+
+Never fabricate:
+- testimonials
+- statistics
+- reviews
+- bonuses
+- features
+- prices
+- discounts
+- links
+- customer results
+- income claims
+- product status
+
+Always adapt the content to the requested:
+- platform
+- tone
+- content type
+- audience
+- objective
+- length
+
+Write naturally like a real Malaysian social media copywriter.
+Avoid generic AI-sounding writing (Elakkan ayat cliché seperti "Pernah tak...", "Tahukah anda...", "Dalam dunia yang serba pantas...", "Kini tiba masanya...").
+
+If the user asks for information that is not available in the Knowledge Base, do not guess.
+If a requested claim cannot be supported by the Knowledge Base, either omit it or tell the user that the information is unavailable.
+Maintain factual accuracy while allowing creative freedom in the writing.
+
+==================================================
+KNOWLEDGE BASE FACTS (STRICT SOURCE OF TRUTH)
+==================================================
+
+1. PRODUK UTAMA:
+- Nama: POWER JELAJAH ("All in One Pakej").
+- Mengandungi: Jelajah Tajwid DAN Jelajah Iqra'.
+- Terdapat extra game tambahan (DILARANG mereka nama game, jumlah game, atau mekanik game).
+
+2. JELAJAH IQRA':
+- Pembelajaran Iqra' secara interaktif gabungan aktiviti, permainan dan latihan berdasarkan silibus Iqra' 1 hingga 6.
+- 6 siri: Jelajah Iqra' 1, Jelajah Iqra' 2, Jelajah Iqra' 3, Jelajah Iqra' 4, Jelajah Iqra' 5, Jelajah Iqra' 6.
+- Menggunakan silibus Iqra' 1-6.
+- STATUS: Iqra' 1 hingga 6 SEMUANYA SUDAH BOLEH DIGUNAKAN (Lengkap siri 1 sehingga 6).
+- Bentuk aktiviti: Kenal & pilih huruf, Padankan huruf, Pilih jawapan betul, Susun huruf/perkataan, Cari huruf tertentu, Aktiviti baris & tanda bacaan, Latihan membaca, Cabaran checkpoint, Sistem markah/bintang, Progress pembelajaran.
+- Sesuai untuk kanak-kanak belajar di rumah bersama ibu bapa, guru mengaji atau kelas Al-Quran.
+- TIDAK MENGGANTIKAN BUKU IQRA'. Ia bahan tambahan/interaktif pengukuhan.
+- Tidak perlu install aplikasi. Guna melalui webapp link (telefon, tablet atau komputer).
+- PERLU INTERNET.
+- Untuk Jelajah Iqra' yang dibina: TIDAK MENGGUNAKAN FUNGSI AUDIO (jangan cipta ada audio).
+- Digalakkan pantauan ibu bapa/guru untuk sebutan betul.
+- Link webapp adalah milik peribadi pembeli sahaja & TIDAK BOLEH DIKONGSI dengan orang lain.
+- Untuk guru: Online boleh share screen; Offline boleh beri device kepada pelajar.
+
+3. JELAJAH TAJWID:
+- Webkuiz pembelajaran Tajwid santai, interaktif dan seronok.
+- Ciri-ciri: Tak perlu login, Tak perlu daftar akaun, Tak perlu simpan data pelajar, Boleh main tanpa had, Akses terus melalui web, Boleh guna berulang kali.
+- VERSI: V1, V2, V3.
+- STATUS: V1 dan V2 telah lengkap dan sedia digunakan. V3 akan ditambah secara berperingkat (jangan dakwa V3 sudah siap).
+- Sesuai untuk: Guru mengaji, Guru Al-Quran, Guru Tajwid, Pelajar sekolah rendah/mengaji, Ibu bapa.
+- Bukan pengganti guru/kelas mengaji.
+- Perlu internet. Boleh telefon, tablet, komputer. Share screen online atau bagi device offline.
+- Link adalah milik peribadi pembeli, tidak boleh dikongsi.
+
+4. HARGA & PEMBELIAN (PENTING):
+- END USER: Harga asal RM30. Harga promosi sehingga 30/9 ialah RM15.
+- AFFILIATE: Harga asal RM40. Harga promosi sehingga 30/9 ialah RM25.
+- Bayaran sekali sahaja untuk akses seumur hidup (Bukan bulanan, bukan subscription).
+- Pembayaran manual melalui bank transfer, hantar resit kepada admin.
+- Pendaftaran Affiliate sudah dibuka (boleh daftar dengan admin).
+
+5. CTA & MAKLUMAT HUBUNGAN:
+- DILARANG mereka nombor WhatsApp, link palsu, nombor akaun atau nama admin.
+- Gunakan CTA umum jika tiada maklumat khusus, contoh: "Boleh dapatkan maklumat lanjut daripada admin." atau "Tinggalkan komen / DM untuk info lanjut."`;
+
+  </script>
+
+  <script>
+    // State management
+    let isGenerating = false;
+    let currentGeneratedCopies = []; // Array for single copy or 3 angles
+    let currentSelectedAngleIndex = 0;
+    let lastRequestParams = null; // For regenerate
+
+    // UI Elements
+    const platformSelector = document.getElementById('platformSelector');
+    const selectedPlatformInput = document.getElementById('selectedPlatform');
+    const contentTypeSelect = document.getElementById('contentTypeSelect');
+    const toneSelect = document.getElementById('toneSelect');
+    const lengthSelector = document.getElementById('lengthSelector');
+    const selectedLengthInput = document.getElementById('selectedLength');
+    const userPromptInput = document.getElementById('userPrompt');
+
+    const btnGenerate = document.getElementById('btnGenerate');
+    const btnGenerate3Angles = document.getElementById('btnGenerate3Angles');
+    const btnResetForm = document.getElementById('btnResetForm');
+
+    const emptyState = document.getElementById('emptyState');
+    const loadingState = document.getElementById('loadingState');
+    const contentState = document.getElementById('contentState');
+    const outputContentArea = document.getElementById('outputContentArea');
+    const outputMetaBadge = document.getElementById('outputMetaBadge');
+    const activeBadgeTag = document.getElementById('activeBadgeTag');
+
+    const statsBadgeContainer = document.getElementById('statsBadgeContainer');
+    const charCountBadge = document.getElementById('charCountBadge');
+    const wordCountBadge = document.getElementById('wordCountBadge');
+
+    const angleTabsContainer = document.getElementById('angleTabsContainer');
+    const actionButtonsRow = document.getElementById('actionButtonsRow');
+    const btnCopyText = document.getElementById('btnCopyText');
+    const copyBtnText = document.getElementById('copyBtnText');
+    const btnRegenerate = document.getElementById('btnRegenerate');
+    const btnToggleModify = document.getElementById('btnToggleModify');
+    const modifyDrawer = document.getElementById('modifyDrawer');
+    const modifyInput = document.getElementById('modifyInput');
+    const btnSubmitModify = document.getElementById('btnSubmitModify');
+    const btnCloseModify = document.getElementById('btnCloseModify');
+
+    const toastNotification = document.getElementById('toastNotification');
+    const toastMessage = document.getElementById('toastMessage');
+    const toastIcon = document.getElementById('toastIcon');
+
+    // Chip click handler helper
+    function setupChipGroup(container, hiddenInput, activeClass, inactiveClass) {
+      container.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const val = btn.dataset.val;
+        hiddenInput.value = val;
+        Array.from(container.querySelectorAll('button')).forEach(b => {
+          b.className = b.className.replace(activeClass, inactiveClass);
+          if (b === btn) {
+            b.classList.remove(...inactiveClass.split(' '));
+            b.classList.add(...activeClass.split(' '));
+          }
+        });
+      });
+    }
+
+    const activeChipStyle = "active-chip py-2 px-1 text-center rounded-xl text-xs font-semibold border transition-all bg-brand-600 text-white border-brand-600 shadow-sm shadow-brand-500/20";
+    const inactiveChipStyle = "inactive-chip py-2 px-1 text-center rounded-xl text-xs font-semibold border transition-all bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100";
+
+    setupChipGroup(platformSelector, selectedPlatformInput, activeChipStyle, inactiveChipStyle);
+    setupChipGroup(lengthSelector, selectedLengthInput, activeChipStyle, inactiveChipStyle);
+
+    // Prompt pills click
+    document.querySelectorAll('.prompt-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        const text = pill.getAttribute('data-pill');
+        userPromptInput.value = text;
+        userPromptInput.focus();
+        showToast("Arahan dimasukkan!", "💡");
+      });
+    });
+
+    // Modifier pills click
+    document.querySelectorAll('.mod-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        modifyInput.value = pill.getAttribute('data-mod');
+        modifyInput.focus();
+      });
+    });
+
+    function showToast(msg, icon = "✅") {
+      toastMessage.textContent = msg;
+      toastIcon.textContent = icon;
+      toastNotification.classList.remove('translate-y-20', 'opacity-0');
+      toastNotification.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toastNotification.classList.remove('translate-y-0', 'opacity-100');
+        toastNotification.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    function updateStats(text) {
+      const clean = text ? text.trim() : "";
+      const chars = clean.length;
+      const words = clean ? clean.split(/\s+/).filter(Boolean).length : 0;
+      charCountBadge.textContent = `${chars} aksara`;
+      wordCountBadge.textContent = `${words} patah perkataan`;
+      statsBadgeContainer.classList.remove('hidden');
+    }
+
+    outputContentArea.addEventListener('input', (e) => {
+      updateStats(e.target.value);
+      if (currentGeneratedCopies.length > 0) {
+        currentGeneratedCopies[currentSelectedAngleIndex] = e.target.value;
+      }
+    });
+
+    /**
+     * Panggil Netlify Serverless Function dengan auto-fallback endpoint & diagnostik 404
+     */
+    async function callGeminiApi(promptText, isJson = false) {
+      // Cuba endpoint /api/generate dahulu (disediakan oleh netlify.toml), jika gagal cuba direct function path
+      const endpoints = ['/api/generate', '/.netlify/functions/generate'];
+      
+      const payload = {
+        prompt: promptText,
+        systemInstruction: SYSTEM_INSTRUCTION,
+        isJson: isJson
+      };
+
+      let lastError = null;
+
+      for (const endpoint of endpoints) {
+        try {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (res.status === 404) {
+            // Cuba endpoint seterusnya dalam senarai
+            lastError = new Error("404_NOT_FOUND");
+            continue;
+          }
+
+          if (!res.ok) {
+            let errorDetails = "";
+            try {
+              const errJson = await res.json();
+              errorDetails = errJson.error || errJson.message || JSON.stringify(errJson);
+            } catch (e) {
+              errorDetails = await res.text();
+            }
+            throw new Error(`[Netlify Error ${res.status}]: ${errorDetails}`);
+          }
+
+          const data = await res.json();
+          if (!data || !data.text) {
+            throw new Error("Respons daripada pelayan kosong.");
+          }
+          return data.text;
+        } catch (err) {
+          if (err.message !== "404_NOT_FOUND") {
+            throw err;
+          }
+        }
+      }
+
+      // Jika kedua-dua endpoint menghasilkan 404
+      throw new Error(
+        "Ralat 404: Netlify Function tidak dijumpai!\n\n" +
+        "PUNCA BIASA:\n" +
+        "1. Anda upload guna kaedah 'Drag & Drop' folder biasa ke Netlify (Netlify tidak compile function melalui drag & drop manual).\n" +
+        "2. Pastikan projek ini disambungkan melalui GitHub ke Netlify, ATAU pastikan folder 'netlify/functions' wujud dalam repositori anda.\n" +
+        "3. Semak tab 'Functions' di Dashboard Netlify anda untuk memastikan function 'generate' sudah berstatus Active."
+      );
+    }
+
+    function buildGeneratePrompt({ platform, contentType, tone, length, userPrompt, variationNote = "" }) {
+      return `Tolong hasilkan copywriting media sosial untuk produk POWER JELAJAH.
+
+SPESIFIKASI:
+- Platform: ${platform}
+- Jenis Content: ${contentType}
+- Gaya Penulisan: ${tone}
+- Panjang Teks: ${length}
+- Arahan Affiliate: "${userPrompt || "Hasilkan content menarik untuk tarik minat pelanggan/ibu bapa atau guru"}"
+${variationNote ? `- Variasi / Penegasan Tambahan: ${variationNote}` : ""}
+
+PANDUAN FORMAT MENGIKUT PLATFORM:
+- Facebook: Perenggan kemas, boleh sertakan penceritaan dan nilai, mudah dibaca.
+- Threads: Nada percakapan (conversational), bersahaja, relatable, tidak nampak macam iklan hard sell murah.
+- Instagram: Visual spacing yang sedap mata memandang, baris kemas.
+- TikTok: Format skrip video dengan [Hook pembuka], [Isi utama], [CTA penutup] yang mudah diucapkan.
+- WhatsApp Status: Ringkas, padat, boleh dibahagikan kepada Status 1, Status 2 jika sesuai.
+
+INGATAN PENTING:
+- Hanya guna fakta sah dari Knowledge Base (Jelajah Tajwid & Jelajah Iqra').
+- Jangan cipta promosi palsu, nombor WhatsApp, link atau claim tiada asas.
+- Tulis dalam Bahasa Melayu yang natural dan berkesan.`;
+    }
+
+    async function handleGenerate(is3Angles = false, variationAngleNote = "") {
+      if (isGenerating) return;
+
+      const platform = selectedPlatformInput.value;
+      const contentType = contentTypeSelect.value;
+      const tone = toneSelect.value;
+      const length = selectedLengthInput.value;
+      const userPrompt = userPromptInput.value.trim();
+
+      lastRequestParams = { platform, contentType, tone, length, userPrompt, is3Angles };
+
+      // Set Loading UI
+      isGenerating = true;
+      emptyState.classList.add('hidden');
+      contentState.classList.add('hidden');
+      modifyDrawer.classList.add('hidden');
+      actionButtonsRow.classList.add('hidden');
+      statsBadgeContainer.classList.add('hidden');
+      loadingState.classList.remove('hidden');
+
+      const loadingStatus = document.getElementById('loadingStatusText');
+      loadingStatus.textContent = is3Angles 
+        ? "Sedang merangka 3 angle berbeza (Emotional, Educational, Direct Selling)..." 
+        : "Menyusun hook menarik, emosi & menyemak ketepatan fakta Power Jelajah...";
+
+      try {
+        if (!is3Angles) {
+          // Single generation
+          const prompt = buildGeneratePrompt({ platform, contentType, tone, length, userPrompt, variationNote: variationAngleNote });
+          const generatedText = await callGeminiApi(prompt);
+
+          currentGeneratedCopies = [generatedText.trim()];
+          currentSelectedAngleIndex = 0;
+
+          angleTabsContainer.classList.add('hidden');
+          outputMetaBadge.textContent = `${platform} • ${contentType} • Gaya ${tone}`;
+          activeBadgeTag.textContent = platform;
+
+          displayCurrentCopy();
+          showToast("Copywriting berjaya dihasilkan!", "⚡");
+        } else {
+          // 3 Angles Generation via structured JSON
+          const prompt3Angles = `Hasilkan 3 VERSI copywriting yang SANGAT BERBEZA pendekatannya (angles) untuk mempromosikan POWER JELAJAH.
+
+SPESIFIKASI:
+- Platform: ${platform}
+- Gaya Asas: ${tone}
+- Panjang Teks: ${length}
+- Arahan Affiliate: "${userPrompt || "Tulis promosi Power Jelajah yang memikat hati pembaca"}"
+
+Format jawapan WAJIB dalam JSON dengan format:
+{
+  "angles": [
+    {
+      "name": "Angle 1 (Emotional / Relatable / Story)",
+      "copy": "Teks copy untuk angle 1..."
+    },
+    {
+      "name": "Angle 2 (Educational / Problem-Solution)",
+      "copy": "Teks copy untuk angle 2..."
+    },
+    {
+      "name": "Angle 3 (Selling / Urgency / Value)",
+      "copy": "Teks copy untuk angle 3..."
+    }
+  ]
+}
+
+Patuhi SEMUA fakta Knowledge Base Power Jelajah. Pastikan ketiga-tiga angle benar-benar mempunyai gaya dan penceritaan yang berbeza.`;
+
+          const jsonResponseText = await callGeminiApi(prompt3Angles, true);
+          let parsed;
+          try {
+            parsed = JSON.parse(jsonResponseText);
+          } catch(e) {
+            // fallback if markdown wrapped
+            const clean = jsonResponseText.replace(/```json/g, '').replace(/```/g, '').trim();
+            parsed = JSON.parse(clean);
+          }
+
+          if (parsed && Array.isArray(parsed.angles) && parsed.angles.length > 0) {
+            currentGeneratedCopies = parsed.angles.map(a => a.copy);
+            currentSelectedAngleIndex = 0;
+
+            angleTabsContainer.classList.remove('hidden');
+            updateAngleTabsUI();
+            outputMetaBadge.textContent = `3 Variasi Angle Berbeza • ${platform}`;
+            activeBadgeTag.textContent = `Angle 1`;
+
+            displayCurrentCopy();
+            showToast("3 Angle berjaya dihasilkan!", "🔥");
+          } else {
+            throw new Error("Struktur JSON tidak menepati format 3 angle.");
+          }
+        }
+      } catch (err) {
+        showToast("Ralat penjanaan. Sila cuba sebentar lagi.", "⚠️");
+        outputContentArea.value = `Maaf, berlaku ralat semasa menjana copy:\n${err.message}\n\nSila pastikan sambungan internet stabil atau cuba tekan butang Generate sekali lagi.`;
+        contentState.classList.remove('hidden');
+        actionButtonsRow.classList.remove('hidden');
+      } finally {
+        isGenerating = false;
+        loadingState.classList.add('hidden');
+      }
+    }
+
+    function displayCurrentCopy() {
+      const copyText = currentGeneratedCopies[currentSelectedAngleIndex] || "";
+      outputContentArea.value = copyText;
+      contentState.classList.remove('hidden');
+      actionButtonsRow.classList.remove('hidden');
+      updateStats(copyText);
+    }
+
+    function updateAngleTabsUI() {
+      const buttons = angleTabsContainer.querySelectorAll('.angle-tab-btn');
+      buttons.forEach((btn, idx) => {
+        if (idx === currentSelectedAngleIndex) {
+          btn.className = "angle-tab-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-bold transition-all bg-white text-slate-800 shadow-sm flex items-center justify-center gap-1 border border-slate-200/80";
+        } else {
+          btn.className = "angle-tab-btn flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold transition-all text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1";
+        }
+      });
+    }
+
+    angleTabsContainer.addEventListener('click', (e) => {
+      const btn = e.target.closest('.angle-tab-btn');
+      if (!btn) return;
+      const idx = parseInt(btn.dataset.angle, 10);
+      currentSelectedAngleIndex = idx;
+      updateAngleTabsUI();
+      activeBadgeTag.textContent = `Angle ${idx + 1}`;
+      displayCurrentCopy();
+    });
+
+    btnCopyText.addEventListener('click', () => {
+      const textToCopy = outputContentArea.value;
+      if (!textToCopy) return;
+
+      // Use textarea select + execCommand for maximum iframe / browser compatibility
+      outputContentArea.select();
+      outputContentArea.setSelectionRange(0, 99999);
+
+      let success = false;
+      try {
+        success = document.execCommand('copy');
+      } catch (err) {
+        success = false;
+      }
+
+      if (success) {
+        copyBtnText.textContent = "✅ DISALIN!";
+        btnCopyText.classList.remove('bg-slate-900');
+        btnCopyText.classList.add('bg-emerald-600');
+        showToast("Teks berjaya disalin ke clipboard!", "📋");
+        setTimeout(() => {
+          copyBtnText.textContent = "📋 SALIN COPY";
+          btnCopyText.classList.remove('bg-emerald-600');
+          btnCopyText.classList.add('bg-slate-900');
+        }, 2000);
+      } else {
+        showToast("Sila salin teks secara manual.", "⚠️");
+      }
+    });
+
+    // REGENERATE: Generates a distinct fresh angle on demand
+    btnRegenerate.addEventListener('click', () => {
+      if (!lastRequestParams) {
+        handleGenerate(false);
+        return;
+      }
+
+      const randomAngles = [
+        "Ubah pendekatan kepada sudut situasi harian anak & ibu bapa di rumah.",
+        "Ubah pendekatan kepada rasa seronok anak bermain sambil kuatkan kefahaman mengaji.",
+        "Gunakan angle penjimatan dan tawaran berbaloi RM15 sekali bayar seumur hidup.",
+        "Tumpukan kepada kepraktisan guru mengaji yang nak jimat masa dan buat kelas seronok.",
+        "Fokus kepada cabaran anak cepat bosan dengan buku biasa lalu diperkukuh dengan kuiz interaktif."
+      ];
+      const selectedAngle = randomAngles[Math.floor(Math.random() * randomAngles.length)];
+      
+      showToast("Menjana semula dengan sudut pandang baharu...", "🔄");
+      handleGenerate(lastRequestParams.is3Angles, selectedAngle);
+    });
+
+    // TOGGLE MODIFY DRAWER
+    btnToggleModify.addEventListener('click', () => {
+      modifyDrawer.classList.toggle('hidden');
+      if (!modifyDrawer.classList.contains('hidden')) {
+        modifyInput.focus();
+      }
+    });
+
+    btnCloseModify.addEventListener('click', () => {
+      modifyDrawer.classList.add('hidden');
+    });
+
+    // SUBMIT MODIFICATION REQUEST
+    btnSubmitModify.addEventListener('click', async () => {
+      const instruction = modifyInput.value.trim();
+      if (!instruction) {
+        showToast("Sila masukkan arahan ubahan terlebih dahulu", "ℹ️");
+        return;
+      }
+
+      const currentText = outputContentArea.value;
+      if (!currentText) return;
+
+      isGenerating = true;
+      emptyState.classList.add('hidden');
+      contentState.classList.add('hidden');
+      modifyDrawer.classList.add('hidden');
+      loadingState.classList.remove('hidden');
+
+      document.getElementById('loadingStatusText').textContent = `Mengubah copy mengikut arahan: "${instruction}"...`;
+
+      const modifyPrompt = `Berikut adalah copywriting sedia ada untuk POWER JELAJAH:
+
+--- COPYWRITING ASAL ---
+${currentText}
+--- TAMAT COPYWRITING ASAL ---
+
+ARAHAN AFFILIATE UNTUK MENGUBAH COPY INI:
+"${instruction}"
+
+TUGAS ANDA:
+Ubah dan perelokkan copywriting di atas mengikut arahan affiliate tersebut.
+Pastikan:
+1. SEMUA fakta Power Jelajah (Jelajah Tajwid & Jelajah Iqra') kekal tepat dan mematuhi Knowledge Base.
+2. Jangan cipta fakta di luar pengetahuan rasmi.
+3. Berikan teks copywriting yang lengkap selepas diubah (jangan berikan nota atau mukadimah, terus hasilkan teks copywriting).`;
+
+      try {
+        const revisedCopy = await callGeminiApi(modifyPrompt);
+        currentGeneratedCopies[currentSelectedAngleIndex] = revisedCopy.trim();
+        displayCurrentCopy();
+        showToast("Copywriting berjaya diubah!", "✏️");
+        modifyInput.value = "";
+      } catch (err) {
+        showToast("Gagal mengubah copy. Sila cuba lagi.", "⚠️");
+        contentState.classList.remove('hidden');
+      } finally {
+        isGenerating = false;
+        loadingState.classList.add('hidden');
+      }
+    });
+
+    // Support Enter key in modify input
+    modifyInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        btnSubmitModify.click();
+      }
+    });
+
+    // Main generate triggers
+    btnGenerate.addEventListener('click', () => handleGenerate(false));
+    btnGenerate3Angles.addEventListener('click', () => handleGenerate(true));
+
+    // Reset Form
+    btnResetForm.addEventListener('click', () => {
+      userPromptInput.value = "";
+      contentTypeSelect.selectedIndex = 0;
+      toneSelect.selectedIndex = 0;
+      selectedPlatformInput.value = "Facebook";
+      selectedLengthInput.value = "Sederhana";
+
+      // Reset visual chips
+      Array.from(platformSelector.querySelectorAll('button')).forEach((b, i) => {
+        b.className = i === 0 ? activeChipStyle : inactiveChipStyle;
+      });
+      Array.from(lengthSelector.querySelectorAll('button')).forEach((b, i) => {
+        b.className = i === 1 ? activeChipStyle : inactiveChipStyle;
+      });
+
+      showToast("Borang telah diset semula", "🔄");
+    });
+  </script>
+</body>
+</html>
