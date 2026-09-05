@@ -1,6 +1,6 @@
 /**
  * Netlify Function: generate.js
- * Universal Netlify Function dengan Auto-Fallback Model Gemini (2.0-flash, 2.5-flash)
+ * Dilengkapi Auto-Retry & Multi-Model Pool (Bebas Ralat 'High Demand')
  */
 
 export default async (req, context) => {
@@ -32,7 +32,6 @@ export default async (req, context) => {
 
   const apiKey = process.env.GEMINI_API_KEY || 
                  process.env.GOOGLE_API_KEY || 
-                 process.env.NETLIFY_AI_GATEWAY_KEY || 
                  '';
 
   if (!apiKey) {
@@ -44,11 +43,12 @@ export default async (req, context) => {
     });
   }
 
-  // Senarai model rasmi Google mengikut turutan keutamaan
+  // Senarai model Google mengikut susunan ketahanan trafik tinggi
   const candidateModels = [
+    'gemini-2.0-flash-lite',
     'gemini-2.0-flash',
-    'gemini-2.5-flash',
-    'gemini-flash-latest'
+    'gemini-2.5-flash-lite',
+    'gemini-2.5-flash'
   ];
 
   const restPayload = {
@@ -69,39 +69,47 @@ export default async (req, context) => {
 
   let lastErrorMessage = '';
 
-  // Cuba setiap model secara automatik jika model sebelumnya tidak dijumpai
+  // Cuba setiap model dalam senarai jika satu model sibuk (high demand)
   for (const model of candidateModels) {
-    try {
-      const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
-      const fetchResponse = await fetch(targetUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(restPayload)
-      });
+        const fetchResponse = await fetch(targetUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(restPayload)
+        });
 
-      if (fetchResponse.ok) {
-        const jsonResult = await fetchResponse.json();
-        const candidateText = jsonResult.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (fetchResponse.ok) {
+          const jsonResult = await fetchResponse.json();
+          const candidateText = jsonResult.candidates?.[0]?.content?.parts?.[0]?.text;
 
-        if (candidateText) {
-          return new Response(JSON.stringify({ text: candidateText }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-          });
+          if (candidateText) {
+            return new Response(JSON.stringify({ text: candidateText }), {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' }
+            });
+          }
+        } else {
+          const errText = await fetchResponse.text();
+          lastErrorMessage = errText;
+
+          // Jika Google sibuk (503 / 429), tunggu 800ms dan cuba semula atau tukar model
+          if (fetchResponse.status === 503 || fetchResponse.status === 429) {
+            await new Promise(r => setTimeout(r, 800));
+            continue;
+          }
+          // Jika 404 (model tiada), terus langkau ke model seterusnya
+          break;
         }
-      } else {
-        const errText = await fetchResponse.text();
-        lastErrorMessage = errText;
-        // Jika ralat 404 (model tidak dijumpai), teruskan gelung untuk cuba model seterusnya
-        continue;
+      } catch (netErr) {
+        lastErrorMessage = netErr.message;
       }
-    } catch (netErr) {
-      lastErrorMessage = netErr.message;
     }
   }
 
-  // Jika semua model gagal
+  // Jika kesemua model gagal selepas dicuba
   let cleanMsg = lastErrorMessage;
   try {
     const j = JSON.parse(lastErrorMessage);
