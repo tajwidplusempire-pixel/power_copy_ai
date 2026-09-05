@@ -1,39 +1,4 @@
-/**
- * Netlify Function: generate.js
- * Dilengkapi Auto-Retry & Multi-Model Pool (Bebas Ralat 'High Demand')
- */
-
-export default async (req, context) => {
-  if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Sila gunakan kaedah POST.' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  let requestData;
-  try {
-    requestData = await req.json();
-  } catch (err) {
-    return new Response(JSON.stringify({ error: 'Format JSON permintaan tidak sah.' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  const { prompt, systemInstruction, isJson } = requestData;
-
-  if (!prompt) {
-    return new Response(JSON.stringify({ error: 'Arahan prompt tidak dibekalkan.' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  const apiKey = process.env.GEMINI_API_KEY || 
-                 process.env.GOOGLE_API_KEY || 
-                 '';
-
+// ... existing code ...
   if (!apiKey) {
     return new Response(JSON.stringify({
       error: 'GEMINI_API_KEY belum dimasukkan di Netlify. Sila ke Site configuration > Environment variables.'
@@ -43,12 +8,12 @@ export default async (req, context) => {
     });
   }
 
-  // Senarai model Google mengikut susunan ketahanan trafik tinggi
+  // Senarai model rasmi Google terkini (dimulakan dengan gemini-3.6-flash seperti yang disyorkan oleh Google)
   const candidateModels = [
-    'gemini-2.0-flash-lite',
-    'gemini-2.0-flash',
-    'gemini-2.5-flash-lite',
-    'gemini-2.5-flash'
+    'gemini-3.6-flash',
+    'gemini-flash-latest',
+    'gemini-3.5-flash',
+    'gemini-2.0-flash'
   ];
 
   const restPayload = {
@@ -69,7 +34,7 @@ export default async (req, context) => {
 
   let lastErrorMessage = '';
 
-  // Cuba setiap model dalam senarai jika satu model sibuk (high demand)
+  // Cuba setiap model dalam senarai
   for (const model of candidateModels) {
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
@@ -95,12 +60,12 @@ export default async (req, context) => {
           const errText = await fetchResponse.text();
           lastErrorMessage = errText;
 
-          // Jika Google sibuk (503 / 429), tunggu 800ms dan cuba semula atau tukar model
+          // Jika Google sibuk (503 / 429), tunggu sekejap dan cuba semula
           if (fetchResponse.status === 503 || fetchResponse.status === 429) {
             await new Promise(r => setTimeout(r, 800));
             continue;
           }
-          // Jika 404 (model tiada), terus langkau ke model seterusnya
+          // Jika 404 / deprecated model, langkau terus ke model seterusnya
           break;
         }
       } catch (netErr) {
