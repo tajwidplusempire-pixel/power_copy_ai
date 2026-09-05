@@ -1,10 +1,9 @@
 /**
  * Netlify Function: generate.js
- * Model: gemini-1.5-flash (Model rasmi Google terpantas & stabil)
+ * Universal Netlify Function dengan Auto-Fallback Model Gemini (2.0-flash, 2.5-flash)
  */
 
 export default async (req, context) => {
-  // Hanya benarkan kaedah POST
   if (req.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Sila gunakan kaedah POST.' }), {
       status: 405,
@@ -31,8 +30,10 @@ export default async (req, context) => {
     });
   }
 
-  // Ambil API Key dari Netlify Environment variables
-  const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '';
+  const apiKey = process.env.GEMINI_API_KEY || 
+                 process.env.GOOGLE_API_KEY || 
+                 process.env.NETLIFY_AI_GATEWAY_KEY || 
+                 '';
 
   if (!apiKey) {
     return new Response(JSON.stringify({
@@ -43,66 +44,74 @@ export default async (req, context) => {
     });
   }
 
-  try {
-    // Model rasmi Google: gemini-1.5-flash
-    const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  // Senarai model rasmi Google mengikut turutan keutamaan
+  const candidateModels = [
+    'gemini-2.0-flash',
+    'gemini-2.5-flash',
+    'gemini-flash-latest'
+  ];
 
-    const restPayload = {
-      contents: [{ parts: [{ text: prompt }] }]
+  const restPayload = {
+    contents: [{ parts: [{ text: prompt }] }]
+  };
+
+  if (systemInstruction) {
+    restPayload.systemInstruction = {
+      parts: [{ text: systemInstruction }]
     };
-
-    if (systemInstruction) {
-      restPayload.systemInstruction = {
-        parts: [{ text: systemInstruction }]
-      };
-    }
-
-    if (isJson) {
-      restPayload.generationConfig = {
-        responseMimeType: 'application/json'
-      };
-    }
-
-    const fetchResponse = await fetch(targetUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(restPayload)
-    });
-
-    if (!fetchResponse.ok) {
-      const errorText = await fetchResponse.text();
-      let msg = errorText;
-      try {
-        const j = JSON.parse(errorText);
-        msg = j.error?.message || errorText;
-      } catch (_) {}
-
-      // Pulangkan status 502 supaya frontend tidak tersilap anggap 404 Netlify
-      return new Response(JSON.stringify({ error: `[Google Gemini API]: ${msg}` }), {
-        status: 502,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
-    const jsonResult = await fetchResponse.json();
-    const candidateText = jsonResult.candidates?.[0]?.content?.parts?.[0]?.text;
-
-    if (!candidateText) {
-      return new Response(JSON.stringify({ error: 'Tiada teks dikembalikan oleh model AI.' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
-    return new Response(JSON.stringify({ text: candidateText }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-
-  } catch (err) {
-    return new Response(JSON.stringify({ error: `Ralat Function: ${err.message}` }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
   }
+
+  if (isJson) {
+    restPayload.generationConfig = {
+      responseMimeType: 'application/json'
+    };
+  }
+
+  let lastErrorMessage = '';
+
+  // Cuba setiap model secara automatik jika model sebelumnya tidak dijumpai
+  for (const model of candidateModels) {
+    try {
+      const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+      const fetchResponse = await fetch(targetUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(restPayload)
+      });
+
+      if (fetchResponse.ok) {
+        const jsonResult = await fetchResponse.json();
+        const candidateText = jsonResult.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (candidateText) {
+          return new Response(JSON.stringify({ text: candidateText }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+          });
+        }
+      } else {
+        const errText = await fetchResponse.text();
+        lastErrorMessage = errText;
+        // Jika ralat 404 (model tidak dijumpai), teruskan gelung untuk cuba model seterusnya
+        continue;
+      }
+    } catch (netErr) {
+      lastErrorMessage = netErr.message;
+    }
+  }
+
+  // Jika semua model gagal
+  let cleanMsg = lastErrorMessage;
+  try {
+    const j = JSON.parse(lastErrorMessage);
+    cleanMsg = j.error?.message || lastErrorMessage;
+  } catch (_) {}
+
+  return new Response(JSON.stringify({ 
+    error: `[Google Gemini API]: ${cleanMsg}` 
+  }), {
+    status: 502,
+    headers: { 'Content-Type': 'application/json' }
+  });
 };
