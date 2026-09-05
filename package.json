@@ -1,12 +1,5 @@
 {
-     "name": "power-copy-ai",
-     "version": "1.0.0",
-     "description": "AI Copywriting Assistant untuk Affiliate Power Jelajah",
-     "type": "module",
-     "scripts": {
-       "build": "echo 'Deploying static files and serverless functions...'"
-     },
-     "dependencies": {
-       "@google/genai": "^0.1.1"
-     }
-   }
+  "name": "power-copy-ai",
+  "version": "1.0.0",
+  "type": "module"
+}
