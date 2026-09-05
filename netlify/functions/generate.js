@@ -1,11 +1,9 @@
 /**
  * Netlify Function: generate.js
- * Menggunakan format Standard Netlify / AWS Lambda Handler (CommonJS)
- * Dijamin 100% serasi tanpa sebarang isu ESM / Module Scope.
+ * Model: gemini-3.5-flash-lite (Model rasmi Google terkini & terpantas)
  */
 
 exports.handler = async (event, context) => {
-  // Benarkan kaedah POST sahaja
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
@@ -35,7 +33,6 @@ exports.handler = async (event, context) => {
     };
   }
 
-  // Ambil API Key dari Netlify Environment variables
   const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '';
 
   if (!apiKey) {
@@ -48,12 +45,10 @@ exports.handler = async (event, context) => {
     };
   }
 
-  // Senarai model rasmi Google terkini
+  // Model rasmi Google terkini (mengikut saranan API Google)
   const candidateModels = [
-    'gemini-3.6-flash',
-    'gemini-flash-latest',
-    'gemini-2.0-flash',
-    'gemini-2.0-flash-lite'
+    'gemini-3.5-flash-lite',
+    'gemini-3.6-flash'
   ];
 
   const restPayload = {
@@ -74,7 +69,6 @@ exports.handler = async (event, context) => {
 
   let lastErrorMessage = '';
 
-  // Cuba setiap model sehingga berjaya
   for (const model of candidateModels) {
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
@@ -101,12 +95,10 @@ exports.handler = async (event, context) => {
           const errText = await fetchResponse.text();
           lastErrorMessage = errText;
 
-          // Jika Google sibuk / rate limit, jeda sebentar dan cuba lagi
           if (fetchResponse.status === 503 || fetchResponse.status === 429) {
             await new Promise(r => setTimeout(r, 800));
             continue;
           }
-          // Jika model tidak disokong, beralih ke model seterusnya
           break;
         }
       } catch (netErr) {
